@@ -3,6 +3,7 @@ plugins {
     id 'java-library'
     id 'maven-publish'
     id 'net.neoforged.moddev' version '2.0.91'
+    id 'com.diffplug.spotless' version '7.0.2'
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -179,6 +180,16 @@ publishing {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}
+
+// Code style gate: `gradlew spotlessCheck` in CI fails the build on formatting drift.
+// Run `gradlew spotlessApply` locally (or see README-CI.md) to auto-format.
+spotless {
+    java {
+        target 'src/*/java/**/*.java'
+        palantirJavaFormat()
+        removeUnusedImports()
+    }
 }
 
 // IDEA no longer automatically downloads sources/javadoc jars for dependencies, so we need to explicitly enable the behavior.

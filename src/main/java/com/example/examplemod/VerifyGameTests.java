@@ -8,12 +8,12 @@ import net.neoforged.neoforge.gametest.GameTestHolder;
 @GameTestHolder(ExampleMod.MODID)
 public class VerifyGameTests {
 
-    @GameTest
+    @GameTest(template = "swamp_hut", templateNamespace = "minecraft")
     public static void succeedAfterDelay(GameTestHelper helper) {
         helper.runAfterDelay(1, helper::succeed);
     }
 
-    @GameTest
+    @GameTest(template = "swamp_hut", templateNamespace = "minecraft")
     public static void rubyItemHasExpectedId(GameTestHelper helper) {
         helper.succeedWhen(() -> {
             String id = VerifyItems.RUBY.get().getDescriptionId();
