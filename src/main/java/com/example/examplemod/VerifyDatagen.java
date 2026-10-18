@@ -96,7 +96,7 @@ public class VerifyDatagen {
         public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> consumer) {
             consumer.accept(VerifyBlocks.RUBY_BLOCK.get().getLootTable(),
                     LootTable.lootTable().withPool(LootPool.lootPool()
-                            .set(ConstantValue.exactly(1.0f))
+                            .setRolls(ConstantValue.exactly(1.0f))
                             .add(LootItem.lootTableItem(VerifyBlocks.RUBY_BLOCK.get()))));
         }
     }
