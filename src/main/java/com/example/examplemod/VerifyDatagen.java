@@ -1,7 +1,6 @@
 package com.example.examplemod;
 
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
@@ -95,8 +94,7 @@ public class VerifyDatagen {
 
         @Override
         public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> consumer) {
-            consumer.accept(ResourceKey.create(Registries.LOOT_TABLE,
-                            VerifyBlocks.RUBY_BLOCK.get().getLootTable()),
+            consumer.accept(VerifyBlocks.RUBY_BLOCK.get().getLootTable(),
                     LootTable.lootTable().withPool(LootPool.lootPool()
                             .set(ConstantValue.exactly(1.0f))
                             .add(LootItem.lootTableItem(VerifyBlocks.RUBY_BLOCK.get()))));
