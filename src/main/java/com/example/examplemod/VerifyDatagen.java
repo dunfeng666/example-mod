@@ -1,5 +1,9 @@
 package com.example.examplemod;
 
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -23,11 +27,6 @@ import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
-
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.BiConsumer;
 
 @EventBusSubscriber(modid = ExampleMod.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class VerifyDatagen {
@@ -55,17 +54,19 @@ public class VerifyDatagen {
             }
         });
 
-        generator.addProvider(event.includeServer(), new LootTableProvider(output, Set.of(),
-                List.of(new LootTableProvider.SubProviderEntry(
-                        RubyBlockLoot::new,
-                        LootContextParamSets.BLOCK)),
-                lookupProvider));
+        generator.addProvider(
+                event.includeServer(),
+                new LootTableProvider(
+                        output,
+                        Set.of(),
+                        List.of(new LootTableProvider.SubProviderEntry(RubyBlockLoot::new, LootContextParamSets.BLOCK)),
+                        lookupProvider));
 
         generator.addProvider(event.includeClient(), new BlockStateProvider(output, ExampleMod.MODID, helper) {
             @Override
             protected void registerStatesAndModels() {
-                simpleBlockWithItem(VerifyBlocks.RUBY_BLOCK.get(),
-                        models().cubeAll("ruby_block", modLoc("block/ruby_block")));
+                simpleBlockWithItem(
+                        VerifyBlocks.RUBY_BLOCK.get(), models().cubeAll("ruby_block", modLoc("block/ruby_block")));
             }
         });
 
@@ -94,10 +95,12 @@ public class VerifyDatagen {
 
         @Override
         public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> consumer) {
-            consumer.accept(VerifyBlocks.RUBY_BLOCK.get().getLootTable(),
-                    LootTable.lootTable().withPool(LootPool.lootPool()
-                            .setRolls(ConstantValue.exactly(1.0f))
-                            .add(LootItem.lootTableItem(VerifyBlocks.RUBY_BLOCK.get()))));
+            consumer.accept(
+                    VerifyBlocks.RUBY_BLOCK.get().getLootTable(),
+                    LootTable.lootTable()
+                            .withPool(LootPool.lootPool()
+                                    .setRolls(ConstantValue.exactly(1.0f))
+                                    .add(LootItem.lootTableItem(VerifyBlocks.RUBY_BLOCK.get()))));
         }
     }
 }

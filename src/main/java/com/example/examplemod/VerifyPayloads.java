@@ -20,9 +20,7 @@ public class VerifyPayloads {
                 new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(ExampleMod.MODID, "my_data"));
 
         public static final StreamCodec<ByteBuf, MyData> STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.STRING_UTF8, MyData::name,
-                ByteBufCodecs.VAR_INT, MyData::age,
-                MyData::new);
+                ByteBufCodecs.STRING_UTF8, MyData::name, ByteBufCodecs.VAR_INT, MyData::age, MyData::new);
 
         @Override
         public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
@@ -44,7 +42,9 @@ public class VerifyPayloads {
 
     public static class Handlers {
         public static void handleClient(final MyData data, final IPayloadContext context) {
-            context.enqueueWork(() -> { /* main thread work */ });
+            context.enqueueWork(() -> {
+                /* main thread work */
+            });
         }
 
         public static void handleServer(final MyData data, final IPayloadContext context) {

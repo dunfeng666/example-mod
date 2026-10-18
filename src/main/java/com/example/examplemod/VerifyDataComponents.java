@@ -1,7 +1,6 @@
 package com.example.examplemod;
 
 import com.mojang.serialization.Codec;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.StreamCodec;
@@ -13,11 +12,8 @@ public class VerifyDataComponents {
             DeferredRegister.create(Registries.DATA_COMPONENT_TYPE, ExampleMod.MODID);
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> CHARGE =
-            DATA_COMPONENT_TYPES.register("charge",
-                    () -> DataComponentType.<Integer>builder()
-                            .persistent(Codec.INT)
-                            .networkSynchronized(StreamCodec.of(
-                                    (buf, v) -> buf.writeInt(v),
-                                    buf -> buf.readInt()))
-                            .build());
+            DATA_COMPONENT_TYPES.register("charge", () -> DataComponentType.<Integer>builder()
+                    .persistent(Codec.INT)
+                    .networkSynchronized(StreamCodec.of((buf, v) -> buf.writeInt(v), buf -> buf.readInt()))
+                    .build());
 }
