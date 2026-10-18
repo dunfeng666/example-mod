@@ -1,19 +1,19 @@
 package com.example.examplemod;
 
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.storage.loot.LootConsumer;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.LootTableSubProvider;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
@@ -28,6 +28,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
 
 @EventBusSubscriber(modid = ExampleMod.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class VerifyDatagen {
@@ -57,7 +58,7 @@ public class VerifyDatagen {
 
         generator.addProvider(event.includeServer(), new LootTableProvider(output, Set.of(),
                 List.of(new LootTableProvider.SubProviderEntry(
-                        new RubyBlockLoot(),
+                        RubyBlockLoot::new,
                         LootContextParamSets.BLOCK)),
                 lookupProvider));
 
@@ -86,9 +87,16 @@ public class VerifyDatagen {
     }
 
     public static class RubyBlockLoot implements LootTableSubProvider {
+        private final HolderLookup.Provider lookupProvider;
+
+        public RubyBlockLoot(HolderLookup.Provider lookupProvider) {
+            this.lookupProvider = lookupProvider;
+        }
+
         @Override
-        public void generate(HolderLookup.Provider provider, LootConsumer consumer) {
-            consumer.accept(VerifyBlocks.RUBY_BLOCK.get().getLootTable(),
+        public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> consumer) {
+            consumer.accept(ResourceKey.create(Registries.LOOT_TABLE,
+                            VerifyBlocks.RUBY_BLOCK.get().getLootTable()),
                     LootTable.lootTable().withPool(LootPool.lootPool()
                             .set(ConstantValue.exactly(1.0f))
                             .add(LootItem.lootTableItem(VerifyBlocks.RUBY_BLOCK.get()))));
